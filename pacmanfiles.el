@@ -6,7 +6,7 @@
   (interactive)
   (with-current-buffer (get-buffer-create"*pacnew*")
 	(delete-region (point-min) (point-max))
-	(let ((pac-files (split-string (shell-command-to-string "locate -e --regexp '\.pac\(new\|save\|orig\)$'") "\n"))
+	(let ((pac-files (split-string (shell-command-to-string "locate -e --regexp '\\.pac\\(new\\|save\\|orig\\)$'") "\n"))
 		  (var))
 	  (dolist (var pac-files)
 		(insert-button var 'action 'pacmanfiles-ediff)
