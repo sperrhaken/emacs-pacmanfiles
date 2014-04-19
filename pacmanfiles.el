@@ -1,6 +1,6 @@
 (defun pacmanfiles-ediff (button)
   (let* ((file-b (button-label button))
-		 (file-a (replace-regexp-in-string "\\.pac\\(new\\|save\\|orig\\)$" "" file-b)))
+		 (file-a (concat "/sudo::" (replace-regexp-in-string "\\.pac\\(new\\|save\\|orig\\)$" "" file-b))))
 	(ediff-files file-a file-b)))
 
 
