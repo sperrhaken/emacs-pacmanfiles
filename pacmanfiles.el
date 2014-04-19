@@ -1,6 +1,8 @@
 (defun pacmanfiles-ediff (button)
-  (message (concat (button-label button) " clicked"))
-)
+  (let* ((file-b (button-label button))
+		 (file-a (replace-regexp-in-string "\\.pac\\(new\\|save\\|orig\\)$" "" file-b)))
+	(ediff-files file-a file-b)))
+
 
 (defun pacmanfiles()
   (interactive)
