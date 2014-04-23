@@ -16,9 +16,21 @@
 	  (buffer-substring-no-properties point-beginning (line-end-position)))))
 
 
+(defmacro pacmanfiles-maybe-add-sudo (filepath predicate)
+  `(unless (,predicate ,filepath)
+	 (setq ,filepath (concat "/sudo::" ,filepath))
+	 (unless (,predicate ,filepath)
+	   (error "%s failed on %s" (quote ,predicate) ,filepath))))
+
+
 (defun pacmanfiles-ediff (button)
   (let ((file-a (pacmanfiles-current-line-file-a))
 		(file-b (pacmanfiles-current-line-file-b)))
+	(when (file-remote-p default-directory)
+	  ;; just a placeholder otherwise it should be in pacmanfiles
+	  (error "Running pacmanfiles remotely is not yet supported"))
+	(pacmanfiles-maybe-add-sudo file-a file-writable-p)
+	(pacmanfiles-maybe-add-sudo file-b file-readable-p)
 	(ediff-files file-a file-b)))
 
 
