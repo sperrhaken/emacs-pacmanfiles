@@ -1,19 +1,29 @@
-(defun pacmanfiles-current-line-file-a ()
+(defun pacmanfiles-current-line-file (prop)
   (save-excursion
-	(let (point-beginning point-end)
-	  (setq point-beginning (line-beginning-position))
-	  (setq point-end (next-single-property-change point-beginning
-												   'pacmanfiles-file-a))
-	  (buffer-substring-no-properties (line-beginning-position) point-end))))
+	(let (search-start search-end single-property-change)
+	  (cond
+	   ((eq prop 'pacmanfiles-file-a)
+		(setq search-start (line-beginning-position)
+			  single-property-change 'next-single-property-change))
+	   ((eq prop 'pacmanfiles-file-b)
+		(setq search-start (line-end-position)
+			  single-property-change 'previous-single-property-change))
+	   (t (error "Don't know how to handle symbol %s" prop)))
+	  
+	  (setq search-end (funcall single-property-change search-start prop))
+	  (unless search-end
+		(error "Could not find a filename on this line(%s) for %s"
+			   (line-number-at-pos)
+			   prop))
+	  (buffer-substring-no-properties search-start search-end))))
+
+
+(defun pacmanfiles-current-line-file-a ()
+  (pacmanfiles-current-line-file 'pacmanfiles-file-a))
 
 
 (defun pacmanfiles-current-line-file-b ()
-  (save-excursion
-	(let (point-beginning point-end)
-	  (setq point-end (line-end-position))
-	  (setq point-beginning (previous-single-property-change point-end
-															 'pacmanfiles-file-b))
-	  (buffer-substring-no-properties point-beginning (line-end-position)))))
+  (pacmanfiles-current-line-file 'pacmanfiles-file-b))
 
 
 (defmacro pacmanfiles-maybe-add-sudo (filepath predicate)
