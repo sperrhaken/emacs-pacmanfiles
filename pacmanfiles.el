@@ -6,6 +6,12 @@ updated in the package and changed on the disk.  Should return
 a newline separated list.")
 
 
+(defvar pacmanfiles-buffer-name
+  "*pacmanfiles*"
+
+  "The buffer name to use when running `pacmanfiles'.")
+
+
 (defun pacmanfiles-current-line-file (prop)
   (save-excursion
 	(let (search-start search-end single-property-change)
@@ -54,7 +60,7 @@ a newline separated list.")
 
 
 (defun pacmanfiles-revert-buffer (&optional ignore-auto noconfirm)
-  (with-current-buffer (get-buffer-create"*pacnew*")
+  (with-current-buffer (get-buffer-create pacmanfiles-buffer-name)
 	(let ((inhibit-read-only t))
 	  (delete-region (point-min) (point-max))
 	  (let ((pac-files (split-string (shell-command-to-string pacmanfiles-command) "\n"))
@@ -81,7 +87,7 @@ a newline separated list.")
 
 (defun pacmanfiles ()
   (interactive)
-  (switch-to-buffer "*pacnew*")
+  (switch-to-buffer pacmanfiles-buffer-name)
   (pacmanfiles-mode)
   (pacmanfiles-revert-buffer))
 
