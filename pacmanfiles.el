@@ -33,7 +33,8 @@
 	   (error "%s failed on %s" (quote ,predicate) ,filepath))))
 
 
-(defun pacmanfiles-ediff (button)
+(defun pacmanfiles-ediff-current-line (&optional button)
+  (interactive)
   (let ((file-a (pacmanfiles-current-line-file-a))
 		(file-b (pacmanfiles-current-line-file-b)))
 	(when (file-remote-p default-directory)
@@ -79,4 +80,6 @@
 
 (define-derived-mode pacmanfiles-mode special-mode "pacmanfiles"
   "TODO: docstring"
-  (setq revert-buffer-function 'pacmanfiles-revert-buffer))
+  (setq revert-buffer-function 'pacmanfiles-revert-buffer)
+  (define-key pacmanfiles-mode-map
+	(kbd "RET") 'pacmanfiles-ediff-current-line))
