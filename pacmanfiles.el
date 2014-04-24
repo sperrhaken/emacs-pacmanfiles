@@ -44,27 +44,39 @@
 	(ediff-files file-a file-b)))
 
 
-(defun pacmanfiles()
-  (interactive)
+(defun pacmanfiles-revert-buffer (&optional ignore-auto noconfirm)
   (with-current-buffer (get-buffer-create"*pacnew*")
-	(delete-region (point-min) (point-max))
-	(let ((pac-files (split-string (shell-command-to-string "locate -e --regexp '\\.pac\\(new\\|save\\|orig\\)$'") "\n"))
-		  (var))
-	  (dolist (file-b pac-files)
-		(let* ((mtime (lambda (path) (nth 4 (file-attributes path))))
-			   (file-a (file-name-sans-extension file-b))
-			   (file-a-mtime (funcall mtime file-a))
-			   (file-b-mtime (funcall mtime file-b)))
-		  (add-text-properties 0 (length file-a) '(pacmanfiles-file-a t rear-nonsticky t) file-a)
-		  (put-text-property 0 (length file-b) 'pacmanfiles-file-b t file-b)
-		  (insert file-a
-				  "\t"
-				  (format-time-string "%d. %b %Y" file-a-mtime)
-				  "\t")
-		  (insert-button "<--ediff-->" 'action 'pacmanfiles-ediff)
-		  (insert "\t"
-				  (format-time-string "%d. %b %Y" file-b-mtime)
-				  "\t"
-				  file-b
-				  "\n"))))
-	(align-regexp (point-min) (point-max) "\\(\t\\)" 1 1 :repeat)))
+	(let ((inhibit-read-only t))
+	  (delete-region (point-min) (point-max))
+	  (let ((pac-files (split-string (shell-command-to-string "locate -e --regexp '\\.pac\\(new\\|save\\|orig\\)$'") "\n"))
+			(var))
+		(dolist (file-b pac-files)
+		  (let* ((mtime (lambda (path) (nth 4 (file-attributes path))))
+				 (file-a (file-name-sans-extension file-b))
+				 (file-a-mtime (funcall mtime file-a))
+				 (file-b-mtime (funcall mtime file-b)))
+			(add-text-properties 0 (length file-a) '(pacmanfiles-file-a t rear-nonsticky t) file-a)
+			(put-text-property 0 (length file-b) 'pacmanfiles-file-b t file-b)
+			(insert file-a
+					"\t"
+					(format-time-string "%d. %b %Y" file-a-mtime)
+					"\t")
+			(insert-button "<--ediff-->" 'action 'pacmanfiles-ediff)
+			(insert "\t"
+					(format-time-string "%d. %b %Y" file-b-mtime)
+					"\t"
+					file-b
+					"\n"))))
+	  (align-regexp (point-min) (point-max) "\\(\t\\)" 1 1 :repeat))))
+
+
+(defun pacmanfiles ()
+  (interactive)
+  (switch-to-buffer "*pacnew*")
+  (pacmanfiles-mode)
+  (pacmanfiles-revert-buffer))
+
+
+(define-derived-mode pacmanfiles-mode special-mode "pacmanfiles"
+  "TODO: docstring"
+  (setq revert-buffer-function 'pacmanfiles-revert-buffer))
