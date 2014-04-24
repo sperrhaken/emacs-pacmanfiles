@@ -1,3 +1,11 @@
+(defvar pacmanfiles-command
+  "locate -e --regexp '\\.pac\\(new\\|save\\|orig\\)$'"
+
+  "The shell command to find configuration files that have been
+updated in the package and changed on the disk.  Should return
+a newline separated list.")
+
+
 (defun pacmanfiles-current-line-file (prop)
   (save-excursion
 	(let (search-start search-end single-property-change)
@@ -49,7 +57,7 @@
   (with-current-buffer (get-buffer-create"*pacnew*")
 	(let ((inhibit-read-only t))
 	  (delete-region (point-min) (point-max))
-	  (let ((pac-files (split-string (shell-command-to-string "locate -e --regexp '\\.pac\\(new\\|save\\|orig\\)$'") "\n"))
+	  (let ((pac-files (split-string (shell-command-to-string pacmanfiles-command) "\n"))
 			(var))
 		(dolist (file-b pac-files)
 		  (let* ((mtime (lambda (path) (nth 4 (file-attributes path))))
