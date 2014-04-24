@@ -14,17 +14,20 @@ a newline separated list.")
 
 (defun pacmanfiles-current-line-file (prop)
   (save-excursion
-	(let (search-start search-end single-property-change)
+	(let (search-start search-end search-max single-property-change)
 	  (cond
 	   ((eq prop 'pacmanfiles-file-a)
 		(setq search-start (line-beginning-position)
+			  search-max   (line-end-position)
 			  single-property-change 'next-single-property-change))
 	   ((eq prop 'pacmanfiles-file-b)
 		(setq search-start (line-end-position)
+			  search-max   (line-beginning-position)
 			  single-property-change 'previous-single-property-change))
 	   (t (error "Don't know how to handle symbol %s" prop)))
 	  
-	  (setq search-end (funcall single-property-change search-start prop))
+	  (setq search-end (funcall single-property-change search-start prop
+								(current-buffer) search-max))
 	  (unless search-end
 		(error "Could not find a filename on this line(%s) for %s"
 			   (line-number-at-pos)
