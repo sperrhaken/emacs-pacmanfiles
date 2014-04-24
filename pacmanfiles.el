@@ -25,7 +25,7 @@ a newline separated list.")
 			  search-max   (line-beginning-position)
 			  single-property-change 'previous-single-property-change))
 	   (t (error "Don't know how to handle symbol %s" prop)))
-	  
+
 	  (setq search-end (funcall single-property-change search-start prop
 								(current-buffer) search-max))
 	  (unless search-end
@@ -75,8 +75,12 @@ a newline separated list.")
 				 (file-a (file-name-sans-extension file-b))
 				 (file-a-mtime (funcall mtime file-a))
 				 (file-b-mtime (funcall mtime file-b)))
-			(add-text-properties 0 (length file-a) '(pacmanfiles-file-a t rear-nonsticky t) file-a)
-			(put-text-property 0 (length file-b) 'pacmanfiles-file-b t file-b)
+			(add-text-properties 0 (length file-a)
+								 '(pacmanfiles-file-a t rear-nonsticky t)
+								 file-a)
+			(put-text-property 0 (length file-b)
+							   'pacmanfiles-file-b t
+							   file-b)
 			(insert file-a
 					"\t"
 					(format-time-string "%d. %b %Y" file-a-mtime)
