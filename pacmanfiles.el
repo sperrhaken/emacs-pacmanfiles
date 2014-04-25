@@ -13,6 +13,10 @@ a newline separated list.")
 
 
 (defun pacmanfiles-current-line-file (prop)
+  "Return the filename on the current line marked by PROP.
+
+PROP is either the symbol `pacmanfiles-file-a' or the symbol
+`pacmanfiles-file-b'"
   (save-excursion
 	(let (search-start search-end search-max single-property-change)
 	  (cond
@@ -36,6 +40,10 @@ a newline separated list.")
 
 
 (defmacro pacmanfiles-maybe-add-sudo (filepath predicate)
+  "Concatenates \"/sudo::\" to FILEPATH if PREDICATE returns false
+
+FILEPATH is a symbol referring to a variable.  PREDICATE can be
+any function expecting a path to a file."
   `(unless (,predicate ,filepath)
 	 (setq ,filepath (concat "/sudo::" ,filepath))
 	 (unless (,predicate ,filepath)
