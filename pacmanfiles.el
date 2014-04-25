@@ -35,14 +35,6 @@ a newline separated list.")
 	  (buffer-substring-no-properties search-start search-end))))
 
 
-(defun pacmanfiles-current-line-file-a ()
-  (pacmanfiles-current-line-file 'pacmanfiles-file-a))
-
-
-(defun pacmanfiles-current-line-file-b ()
-  (pacmanfiles-current-line-file 'pacmanfiles-file-b))
-
-
 (defmacro pacmanfiles-maybe-add-sudo (filepath predicate)
   `(unless (,predicate ,filepath)
 	 (setq ,filepath (concat "/sudo::" ,filepath))
@@ -52,8 +44,8 @@ a newline separated list.")
 
 (defun pacmanfiles-ediff-current-line (&optional button)
   (interactive)
-  (let ((file-a (pacmanfiles-current-line-file-a))
-		(file-b (pacmanfiles-current-line-file-b)))
+  (let ((file-a (pacmanfiles-current-line-file 'pacmanfiles-file-a))
+		(file-b (pacmanfiles-current-line-file 'pacmanfiles-file-b)))
 	(when (file-remote-p default-directory)
 	  ;; just a placeholder otherwise it should be in pacmanfiles
 	  (error "Running pacmanfiles remotely is not yet supported"))
