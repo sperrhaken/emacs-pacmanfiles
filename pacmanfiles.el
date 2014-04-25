@@ -28,7 +28,7 @@ a newline separated list.")
 
 	  (setq search-end (funcall single-property-change search-start prop
 								(current-buffer) search-max))
-	  (unless search-end
+	  (when (equal search-end search-max)
 		(error "Could not find a filename on this line(%s) for %s"
 			   (line-number-at-pos)
 			   prop))
