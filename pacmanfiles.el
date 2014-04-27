@@ -12,6 +12,19 @@ a newline separated list.")
   "The buffer name to use when running `pacmanfiles'.")
 
 
+(defvar pacmanfiles-diff-command
+  diff-command
+
+  "The command to use to run diff in `pacmanfiles'.")
+
+
+(defvar pacmanfiles-diff-switches
+  diff-switches
+
+  "A string or list of strings specifying switches to be passed to diff,
+when run by `pacmanfiles'.")
+
+
 (defun pacmanfiles-current-line-file (prop)
   "Return the filename on the current line marked by PROP.
 
