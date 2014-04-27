@@ -94,6 +94,17 @@ any function expecting a path to a file."
 	  (align-regexp (point-min) (point-max) "\\(\t\\)" 1 1 :repeat))))
 
 
+(defun pacmanfiles-delete-package-file ()
+  "Delete on the current line the file comming from the package."
+  (interactive)
+  (let ((file-b (pacmanfiles-current-line-file 'pacmanfiles-file-b)))
+	(when (yes-or-no-p (format "Really delete %s? " file-b))
+	  (pacmanfiles-maybe-add-sudo file-b file-writable-p)
+	  (delete-file file-b)
+	  (delete-region (line-beginning-position) (progn (forward-line)
+													  (point))))))
+
+
 (defun pacmanfiles ()
   (interactive)
   (switch-to-buffer pacmanfiles-buffer-name)
@@ -105,4 +116,6 @@ any function expecting a path to a file."
   "TODO: docstring"
   (setq revert-buffer-function 'pacmanfiles-revert-buffer)
   (define-key pacmanfiles-mode-map
-	(kbd "RET") 'pacmanfiles-ediff-current-line))
+	(kbd "RET") 'pacmanfiles-ediff-current-line)
+  (define-key pacmanfiles-mode-map
+	(kbd "d") 'pacmanfiles-delete-package-file))
