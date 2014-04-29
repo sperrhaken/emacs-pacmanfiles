@@ -51,6 +51,11 @@ any function expecting a path to a file."
 
 
 (defun pacmanfiles-ediff-current-line (&optional button)
+  "Run ediff with the files on the current line.
+
+The optional argument BUTTON exists solely so that this function
+can also be used for the 'action' property of `insert-button'.
+The argument is not used in the function."
   (interactive)
   (let ((file-a (pacmanfiles-current-line-file 'pacmanfiles-file-a))
 		(file-b (pacmanfiles-current-line-file 'pacmanfiles-file-b)))
@@ -63,6 +68,10 @@ any function expecting a path to a file."
 
 
 (defun pacmanfiles-revert-buffer (&optional ignore-auto noconfirm)
+  "Clear the buffer, search for entries and reinsert.
+
+Both IGNORE-AUTO and NOCONFIRM are requirements for a
+`revert-buffer' function but are currently unused."
   (with-current-buffer (get-buffer-create pacmanfiles-buffer-name)
 	(let ((inhibit-read-only t))
 	  (delete-region (point-min) (point-max))
@@ -95,7 +104,7 @@ any function expecting a path to a file."
 
 
 (defun pacmanfiles-delete-package-file ()
-  "Delete on the current line the file comming from the package."
+  "Delete on the current line the file coming from the package."
   (interactive)
   (let ((file-b (pacmanfiles-current-line-file 'pacmanfiles-file-b)))
 	(when (yes-or-no-p (format "Really delete %s? " file-b))
@@ -106,6 +115,7 @@ any function expecting a path to a file."
 
 
 (defun pacmanfiles ()
+  "Create a new buffer in `pacmanfiles-mode' and fill it."
   (interactive)
   (switch-to-buffer pacmanfiles-buffer-name)
   (pacmanfiles-mode)
@@ -113,7 +123,10 @@ any function expecting a path to a file."
 
 
 (define-derived-mode pacmanfiles-mode special-mode "pacmanfiles"
-  "TODO: docstring"
+  "Major-mode for managing configuration files installed by the
+package-manager 'pacman', when the with the package associated
+file has been changed independently from the package by the
+user."
   (setq revert-buffer-function 'pacmanfiles-revert-buffer)
   (define-key pacmanfiles-mode-map
 	(kbd "RET") 'pacmanfiles-ediff-current-line)
